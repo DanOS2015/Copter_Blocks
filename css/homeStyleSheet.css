@@ -1,0 +1,157 @@
+html {
+  background:  url(../resources/images/spaceBackground.gif) no-repeat center center fixed;
+  background-size: cover;
+}
+a {
+  color: inherit;
+}
+body {
+  color: #FFFFFF;
+  font-family: 'Varela Round', sans-serif;
+}
+
+body h1 {
+  text-align: center;
+  font-size: 400%;
+}
+
+body h2 {
+  text-align: center;
+  font-size: 200%;
+}
+
+#close{
+  margin-left: 99%;
+  height: 1%;
+  width: 1%;
+  cursor: pointer;
+}
+
+
+#login {
+  background-color: #3C98D2;
+  height: 35%;
+  width: 25%;
+  margin-left: 37%;
+  margin-top: 0%;
+  text-align: center;
+  border: 1px solid;
+  border-radius: 25px;
+  box-shadow: 5px 5px 5px #000101;
+  z-index: 1;
+  visibility: visible;
+  position: absolute;
+  padding-top: 1%;
+  overflow-y: auto;
+}
+
+#outsideOfLogin {
+  visibility: hidden;
+}
+
+#welcomePopup {
+  background-color: #3C98D2;
+  height: 30%;
+  width: 30%;
+  margin-left: 34%;
+  margin-top: 7%;
+  border: 1px solid;
+  border-radius: 25px;
+  box-shadow: 5px 5px 5px #000101;
+  z-index: 1;
+  visibility: hidden;
+  position: absolute;
+  padding-top: 1%;
+  text-align: center;
+}
+
+#welcomeText{
+  text-align: center;
+}
+
+.circle {
+  border-radius: 25%;
+  z-index: 0;
+}
+
+#circle1 {
+  width: 25%;
+  height: 45%;
+  background: #087B6F;
+  position: absolute;
+  top: 50%;
+  left: 30%;
+  margin-right: -50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 5px 5px 5px #000101;
+}
+
+#circle2 {
+  width: 25%;
+  height: 45%;
+  background: #E3E30B;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-right: -50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 5px 5px 5px #000101;
+}
+
+#circle3 {
+  width: 25%;
+  height: 45%;
+  background: #0BE33A;
+  position: absolute;
+  top: 50%;
+  left: 70%;
+  margin-right: -50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 5px 5px 5px #000101;
+}
+
+#logout {
+  text-align: center;
+  left: 50%;
+}
+
+.circle img {
+  position: relative;
+  top: 50%;
+  left: 50%;
+  margin-right: -50%;
+  transform: translate(-50%, -50%);
+}
+
+#circle1 h3 {
+  position: absolute;
+  font-size: 225%;
+  top: 95%;
+  text-align: center;
+  padding-left: 30%;
+  margin-right: -50%;
+}
+
+#circle3 h3 {
+  position: absolute;
+  font-size: 225%;
+  top: 95%;
+  text-align: center;
+  padding-left: 35%;
+  margin-right: -50%;
+}
+
+.footer {
+  position: absolute;
+  height: 10%;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  padding: 1rem;
+  background-image: url("../resources/images/small_steps.png");
+  color: black;
+  font-family: 'Varela Round', sans-serif;
+  text-align: center;
+  border-top-right-radius: 40%;
+  border-top-left-radius: 40%;
+}

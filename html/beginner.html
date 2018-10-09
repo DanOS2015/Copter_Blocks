@@ -1,0 +1,328 @@
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <link rel = "stylesheet" type = "text/css" href = "../css/beginnerStyleSheet.css" />
+    <link href="https://fonts.googleapis.com/css?family=Varela+Round" rel="stylesheet">
+    <script src="../resources/blockly/blockly_compressed.js"></script>
+    <script src="../resources/blockly/blocks_compressed.js"></script>
+    <script src="../resources/blockly/javascript_compressed.js"></script>
+    <script src="../resources/blockly/msg\js\en.js"></script>
+    <script src="../resources/blockly/blocks_drone.js"></script>
+    <script src="../resources/blockly/javascript_drone.js"></script>
+    <script src="../resources/blockly/simulator_blocks.js"></script>
+    <script src="../resources/blockly/simulator_code.js"></script>
+    <script src="../resources/blockly/acorn_interpreter.js"></script>
+    <title>Beginner Course</title>
+  </head>
+  <body>
+    <div class="container">
+      <div id="leftColumn">
+      </div>
+      <div id="rightColumn">
+        <img id="close" onclick="window.close()" src="../resources/images/close.png"></img>
+        <p style="text-align: center">
+          <button onclick="parseCode()">Compile</button>
+          <button id="runBtn" onclick="runStep()" disabled="disabled">Run</button>
+          <button id="stopBtn" onclick="stopRun()" disabled="disabled">Stop</button>
+          <button id="resumeBtn" onclick="runStep()" disabled="disabled">Resume</button>
+          <button id="reset" onClick="reset()" disabled="disabled">Reset</button>
+        </p>
+        <h2 style="text-align: center">Press the compile button then the run button to run the code, press stop and then reset to start again</h2>
+        <div id="simulator">
+          <img id="drone" src="../resources/images/compass.svg"></img>
+        </div>
+        <div id="info">
+          <h2 id="infoText"></h2>
+          <button id="hint" onclick="loadHints()">Hint</button>
+          <h3> Don't forget to take off and land </h3>
+          <a href="loggedIndex.html"><button>Back to Home</button></a>
+          <a href="index.html"><button>Log out</button></a>
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript" src="../resources/move.js"></script>
+    <script src="../js/droneObject.js"></script>
+    <script src="../js/logicalSimulator.js"></script>
+    <script src="../js/simObjects.js"></script>
+    <script src="../js/localStorage.js"></script>
+    <script type="text/javascript">
+      activeUser = getActiveUser();
+      loadExercise();
+      var hintIndex = activeUser.exercise;
+      var index = activeUser.exercise;
+
+      function loadHints(){
+        window.alert(codeHints[hintIndex]);
+      }
+
+      function loadSimulator(file){
+        if(index < 2){
+          document.getElementById('infoText').innerHTML = textInfo[0];
+        }
+        else if(index === 2){
+          document.getElementById('infoText').innerHTML = textInfo[1];
+        }
+        else if(index <= 4){
+          document.getElementById('infoText').innerHTML = textInfo[2];
+        }
+        else if(index <= 6){
+          document.getElementById('infoText').innerHTML = textInfo[3];
+        }
+        else if(index  === 7){
+          document.getElementById('infoText').innerHTML = textInfo[4];
+          document.getElementById('hint').style.visibility = 'hidden';
+        }
+        else if(index === 8){
+          document.getElementById('infoText').innerHTML = textInfo[5];
+          document.getElementById('hint').style.visibility = 'hidden';
+        }
+
+        var jsElm = document.createElement("script");
+
+        jsElm.type = "application/javascript";
+        jsElm.src = file;
+        document.body.appendChild(jsElm);
+      }
+
+      function onHelipad() {
+        return helipad.onHelipad;
+      }
+      function checkRight(){
+        return logicalSim.checkRight(drone.facing) != "Wall";
+      }
+      function checkLeft(){
+        return logicalSim.checkLeft(drone.facing) != "Wall";
+      }
+      function checkForMove(){
+        return logicalSim.checkNextMove(drone.facing) != "Wall";
+      }
+
+      //EXTRA FUNCTIONS
+      function getRandomInt(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+      }
+      function onHover(x,y) {
+        x.style.backgroundColor = y;
+      }
+      function notHover(x,y){
+        x.style.backgroundColor = y;
+      }
+      function hidePopup(divToHide,buttonToHide,divToShow,buttonToShow){
+        divToHide.style.visibility = 'hidden';
+        buttonToHide.style.visibility = 'hidden';
+        divToShow.style.visibility = 'visible';
+        buttonToShow.style.visibility = 'visible';
+      }
+      function finishPopups(lastDiv,lastButton){
+        lastDiv.style.visibility = 'hidden';
+        lastButton.style.visibility = 'hidden';
+      }
+      var pad = document.getElementById("helipad");
+      var simulator = document.getElementById("simulator");
+    </script>
+    <xml id="toolbox" style="display: none">
+      <category name="Drone functions" colour="120">
+        <block type="take_off"></block>
+        <block type="forward"></block>
+        <block type="backward"></block>
+        <block type="left"></block>
+        <block type="right"></block>
+        <block type="clockwise"></block>
+        <block type="counterClockwise"></block>
+        <block type="land"></block>
+      </category>
+    </xml>
+    <script>
+      var leftColumn = document.getElementById('leftColumn');
+      var workspace = Blockly.inject(leftColumn,
+          {toolbox: document.getElementById('toolbox')});
+
+      var myInterpreter = null;
+      var id = null;
+      var stop;
+      function initApi(interpreter, scope) {
+        var wrapper = function(text) {
+          text = text ? text.toString() : '';
+          return interpreter.createPrimitive(alert(text));
+        };
+        interpreter.setProperty(scope, 'alert',
+            interpreter.createNativeFunction(wrapper));
+        var wrapper = function(text) {
+          text = text ? text.toString() : '';
+          return interpreter.createPrimitive(prompt(text));
+        };
+        interpreter.setProperty(scope, 'prompt',
+            interpreter.createNativeFunction(wrapper));
+        var wrapper = function(id) {
+          id = id ? id.toString() : '';
+          return interpreter.createPrimitive(highlightBlock(id));
+        };
+        interpreter.setProperty(scope, 'highlightBlock',
+            interpreter.createNativeFunction(wrapper));
+        var wrapper = function() {
+          return interpreter.createPrimitive(takeoff());
+        };
+        interpreter.setProperty(scope, 'takeoff',
+          interpreter.createNativeFunction(wrapper));
+        var wrapper = function() {
+          return interpreter.createPrimitive(land());
+        };
+        interpreter.setProperty(scope, 'land',
+          interpreter.createNativeFunction(wrapper));
+        var wrapper = function() {
+          return interpreter.createPrimitive(right());
+        };
+        interpreter.setProperty(scope, 'right',
+          interpreter.createNativeFunction(wrapper));
+        var wrapper = function() {
+          return interpreter.createPrimitive(left());
+        };
+        interpreter.setProperty(scope, 'left',
+         interpreter.createNativeFunction(wrapper));
+       var wrapper = function() {
+         return interpreter.createPrimitive(front());
+       };
+      interpreter.setProperty(scope, 'front',
+        interpreter.createNativeFunction(wrapper));
+      var wrapper = function() {
+        return interpreter.createPrimitive(back());
+      };
+      interpreter.setProperty(scope, 'back',
+        interpreter.createNativeFunction(wrapper));
+      var wrapper = function() {
+         return interpreter.createPrimitive(clockwise());
+       };
+       interpreter.setProperty(scope, 'clockwise',
+        interpreter.createNativeFunction(wrapper));
+      var wrapper = function() {
+        return interpreter.createPrimitive(counterClockwise());
+      };
+      interpreter.setProperty(scope, 'counterClockwise',
+        interpreter.createNativeFunction(wrapper));
+      var wrapper = function() {
+        return interpreter.createPrimitive(onHelipad());
+      };
+      interpreter.setProperty(scope, 'onHelipad',
+        interpreter.createNativeFunction(wrapper));
+      var wrapper = function() {
+        return interpreter.createPrimitive(checkRight());
+      };
+      interpreter.setProperty(scope, 'checkRight',
+        interpreter.createNativeFunction(wrapper));
+      var wrapper = function() {
+        return interpreter.createPrimitive(checkForMove());
+      };
+      interpreter.setProperty(scope, 'checkForMove',
+        interpreter.createNativeFunction(wrapper));
+      var wrapper = function() {
+        return interpreter.createPrimitive(checkLeft());
+      };
+      interpreter.setProperty(scope, 'checkLeft',
+        interpreter.createNativeFunction(wrapper));
+      var wrapper = function() {
+        return interpreter.createPrimitive(coinAhead());
+      };
+      interpreter.setProperty(scope, 'coinAhead',
+        interpreter.createNativeFunction(wrapper));
+      var wrapper = function() {
+        return interpreter.createPrimitive(coinLeft());
+      };
+      interpreter.setProperty(scope, 'coinLeft',
+        interpreter.createNativeFunction(wrapper));
+      var wrapper = function() {
+        return interpreter.createPrimitive(coinRight());
+      };
+      interpreter.setProperty(scope, 'coinRight',
+        interpreter.createNativeFunction(wrapper));
+    }
+      var highlightPause = false;
+      function highlightBlock(id) {
+        workspace.highlightBlock(id);
+        highlightPause = true;
+      }
+      function parseCode() {
+        Blockly.JavaScript.STATEMENT_PREFIX = 'highlightBlock(%1);\n';
+        Blockly.JavaScript.addReservedWords('highlightBlock');
+        var code = Blockly.JavaScript.workspaceToCode(workspace);
+        myInterpreter = new Interpreter(code, initApi);
+        alert('Ready to execute!');
+        document.getElementById('runBtn').disabled = '';
+        highlightPause = false;
+        workspace.highlightBlock(null);
+        clearInterval(id);
+      }
+
+      function stepCode() {
+        try {
+          var ok = myInterpreter.step();
+        } finally {
+          if (!ok) {
+            document.getElementById('stopBtn').disabled = '';
+            workspace.highlightBlock(null);
+            clearInterval(id);
+            if(logicalSim.isCompleted()){
+              var exerciseNum = activeUser.exercise+1;
+              activeUser = new user(activeUser.username,activeUser.userID,activeUser.password,1,exerciseNum);
+              localStorage.setItem(activeUser.userID,JSON.stringify(activeUser));
+              if(activeUser.exercise === 9){
+                logicalSim.reset();
+                setTimeout(function(){alert("You've completed the course!");}, 1000);
+                var exerciseNum = activeUser.exercise-1;
+                activeUser = new user(activeUser.username,activeUser.userID,activeUser.password,1,exerciseNum);
+                localStorage.setItem(activeUser.userID,JSON.stringify(activeUser));
+                return;
+              }
+              setTimeout(function(){alert("Well done!");}, 1000);
+              hintIndex = exerciseNum;
+              index = exerciseNum;
+              logicalSim.clean();
+              document.getElementById("stopBtn").disabled = "disabled";
+              setTimeout(function(){window.location.reload();},1500);
+            }
+            else{
+              alert("Try again, don't forget you must take off and land in each exercise.");
+              window.location.reload();
+            }
+            return;
+          }
+        }
+        if(stop){
+          clearInterval(id);
+          stop = false;
+        }
+        else{
+          if (highlightPause) {
+            // A block has been highlighted.  Pause execution here.
+            highlightPause = false;
+          } else {
+            // Keep executing until a highlight statement is reached.
+            stepCode();
+          }
+        }
+      }
+      function runStep(){
+        stop = false;
+        id = setInterval(stepCode, 800);
+        document.getElementById('runBtn').disabled = 'disabled';
+        document.getElementById('stopBtn').disabled = '';
+        document.getElementById('resumeBtn').disabled = 'disabled';
+        document.getElementById('reset').disabled = 'disabled';
+      }
+      function stopRun(){
+        stop = true;
+        document.getElementById('resumeBtn').disabled = '';
+        document.getElementById('stopBtn').disabled = 'disabled';
+        document.getElementById('reset').disabled = '';
+      }
+      function showCode() {
+        // Generate JavaScript code and display it.
+        Blockly.JavaScript.INFINITE_LOOP_TRAP = null;
+        var code = Blockly.JavaScript.workspaceToCode(workspace);
+        alert(code);
+      }
+      function reset(){
+        window.location.reload();
+      }
+    </script>
+  </body>
+</html>

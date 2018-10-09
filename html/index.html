@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <link rel = "stylesheet" type = "text/css" href = "../css/homeStyleSheet.css" />
+    <link href="https://fonts.googleapis.com/css?family=Varela+Round" rel="stylesheet" />
+    <script src="../js/localStorage.js"></script>
+    <title>Copter Blocks</title>
+  </head>
+  <body>
+    <img id="close" onclick="window.close()" src="../resources/images/close.png"></img>
+    <script>
+      deactivateUsers();
+
+      function onHover(x,y){
+        x.style.backgroundColor = y;
+      }
+
+      function notHover(x,y){
+        x.style.backgroundColor = y;
+      }
+
+      function closePopup(div){
+        div.style.visibility = "hidden";
+      }
+    </script>
+    <div id="outsideOfLogin">
+      <h1>Copter Blocks <img src="../resources/images/drone.png"></h1>
+      <h2>Please select a mode below:</h2>
+      <a href="beginner.html"><div id="circle1" class="circle" onmouseover="onHover(this,'#15DFCB')" onmouseout="notHover(this,'#087B6F')">
+        <img src="../resources/images/paper-plane.png">
+        <h3> Simulator </h3>
+      </div></a>
+      <a href="freeCode.html"><div id="circle3" class="circle" onmouseover="onHover(this,'#6BF689')" onmouseout="notHover(this,'#0BE33A')">
+        <img src="../resources/images/rocket.png">
+        <h3> Drone </h3>
+      </div></a>
+      <div class="footer">
+        <h3><b>A 3rd year project by Daniel O'Sullivan and Neil Geoghegan</b></h3>
+        <a href="index.html"><button>Log out</button></a>
+      </div>
+    </div><a/>
+    <div id="login">
+      User:<br>
+      <input id="username" type="text" name="user"><br><br>
+      Password:<br>
+      <input id="password" type="password" name="user" onkeypress="keyPress()"><br><br>
+      <button id="submitBtn" onclick="getUser()">Submit</button><br>
+      <button id="printUserBtn" onclick="printUsers()">Show users</button><br>
+      <p id="result"></p>
+      <h3 id="userList"></h3>
+    </div>
+    <div id="welcomePopup">
+      <div id="welcomeText"></div>
+      <button onclick="closePopup(welcomePopup)">Close</button>
+    </div>
+  </body>
+
+</html>

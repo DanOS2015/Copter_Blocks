@@ -1,0 +1,17 @@
+<xml xmlns="http://www.w3.org/1999/xhtml" id="toolbox" style="display: none;">
+  <block type="controls_if"></block>
+  <block type="controls_repeat_ext"></block>
+  <block type="logic_compare"></block>
+  <block type="math_number"></block>
+  <block type="math_arithmetic"></block>
+  <block type="text_print"></block>
+  <block type="text"></block>
+  <block type="take_off"></block>
+  <block type="forward"></block>
+  <block type="backward"></block>
+  <block type="left"></block>
+  <block type="right"></block>
+  <block type="clockwise"></block>
+  <block type="counterClockwise"></block>
+  <block type="land"></block>
+</xml>

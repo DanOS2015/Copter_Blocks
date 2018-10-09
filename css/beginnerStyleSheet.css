@@ -1,0 +1,77 @@
+html,body {
+  color: #FFFFFF;
+  font-family: 'Varela Round', sans-serif;
+  font-size: 90%;
+  height: 100%;
+  margin: 0px;
+}
+
+#close{
+  margin-left: 95%;
+  height: 2%;
+  width: 2%;
+  cursor: pointer;
+}
+.container {
+		height: 100%;
+}
+
+#blocklyDiv {
+  height: 100%;
+  width: 75%;
+  color: black;
+}
+
+#leftColumn {
+  float: left;
+  width: 70%;
+  background-color: #FFFFFF;
+  height: 100%;
+  color: black;
+}
+
+#rightColumn {
+  float: left;
+  width: 30%;
+  background-color: #494D4A;
+  height: 100%;
+  z-index: ;
+}
+
+#simulator {
+  height: 60%;
+  width: auto;
+  border-style: solid;
+  border-color: black;
+  background-color: #159025;
+  /*background-image: url("resources/images/grid.png");*/
+  background-size: 100% 100% ;
+  overflow: hidden;
+  position: relative;
+}
+
+#info {
+  text-align: center;
+}
+
+#drone {
+  position: relative;
+  height: 7%;
+  width: 7%;
+  top: 0%;
+  left: 0%;
+  z-index: 1;
+}
+
+
+
+.object {
+  position: absolute;
+  height: 9%;
+  width: 10%;
+  top: 1%;
+  left: 1%;
+  z-index: 0;
+}
+
+.container1{}.header{    display:flex;    justify-content:center;    align-items:center;    background-color: teal;    width: 100%;    top: 0;    position: fixed;    box-shadow:0px -5px 5px rgba(49, 79, 79, 0.8),0px 2px 5px rgba(49, 79, 79, 0.8);    z-index: 1;}.name{    font-family: sans-serif;    padding-right: 1%;}.logo{    padding-top: 10px;    padding-right: 10px;}

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <link rel = "stylesheet" type = "text/css" href = "../css/beginnerStyleSheet.css">
+    <link href="https://fonts.googleapis.com/css?family=Varela+Round" rel="stylesheet">
+    <script src="../resources/blockly/blockly_compressed.js"></script>
+    <script src="../resources/blockly/blocks_compressed.js"></script>
+    <script src="../resources/blockly/javascript_compressed.js"></script>
+    <script src="../resources/blockly/msg\js\en.js"></script>
+    <script src="../resources/blockly/blocks_drone.js"></script>
+    <script src="../resources/blockly/javascript_drone.js"></script>
+
+    <title>Beginner Course</title>
+  </head>
+  <body>
+
+    <div class="container">
+      <div id="leftColumn"></div>
+      <div id="rightColumn">
+        <img id="close" onclick="window.close()" src="../resources/images/close.png"></img>
+        <p style="text-align: center">
+          <button onclick="showCode()">Show Code</button>
+          <button onclick="runCode()">Run</button>
+          <button onclick="emStop()">STOP</button>
+        </p>
+        <p style="text-align: center">
+          <a href="loggedIndex.html"><button>Back to Home</button></a>
+          <a href="index.html"><button>Log out</button></a>
+        </p>
+      </div>
+    </div>
+    <div id="blocklyDiv" style="position: absolute"></div>
+    <xml id="toolbox" style="display: none">
+      <category name="Drone functions" colour="120">
+        <!-- -->
+        <block type="takeoff"></block>
+        <block type="land"></block>
+        <block type="stop"></block>
+        <block type="go_forward"></block>
+        <block type="go_backward"></block>
+        <block type="go_left"></block>
+        <block type="go_right"></block>
+        <block type="go_up"></block>
+        <block type="go_down"></block>
+        <block type="turn_clockwise"></block>
+        <block type="turn_counter_clockwise"></block>
+        <block type="wait"></block>
+      </category>
+
+      <category name="Other Functions" colour="120">
+        <block type="controls_if"></block>
+        <block type="controls_repeat_ext"></block>
+        <block type="logic_compare"></block>
+        <block type="math_number"></block>
+        <block type="math_arithmetic"></block>
+        <block type="text"></block>
+        <block type="text_print"></block>
+      </category>
+    </xml>
+    <script>
+      var leftColumn = document.getElementById('leftColumn');
+      var blocklyDiv = document.getElementById('blocklyDiv');
+      var workspace = Blockly.inject(blocklyDiv,
+          {toolbox: document.getElementById('toolbox')});
+      var onresize = function(e) {
+        // Compute the absolute coordinates and dimensions of blocklyArea.
+        var element = leftColumn;
+        var x = 0;
+        var y = 0;
+        do {
+          x += element.offsetLeft;
+          y += element.offsetTop;
+          element = element.offsetParent;
+        } while (element);
+        // Position blocklyDiv over blocklyArea.
+        blocklyDiv.style.left = x + 'px';
+        blocklyDiv.style.top = y + 'px';
+        blocklyDiv.style.width = leftColumn.offsetWidth + 'px';
+        blocklyDiv.style.height = leftColumn.offsetHeight + 'px';
+      };
+      window.addEventListener('resize', onresize, false);
+      onresize();
+      Blockly.svgResize(workspace);
+
+      function showCode() {
+        // Generate JavaScript code and display it.
+        Blockly.JavaScript.INFINITE_LOOP_TRAP = null;
+        var code = Blockly.JavaScript.workspaceToCode(workspace);
+        alert(code);
+      }
+
+
+      function runCode() {
+      arDrone = require('ar-drone');
+      client = arDrone.createClient();
+        // Generate JavaScript code and run it.
+
+        window.LoopTrap = 1000;
+        Blockly.JavaScript.INFINITE_LOOP_TRAP =
+            'if (--window.LoopTrap == 0) throw "Infinite loop.";\n';
+
+        var code = Blockly.JavaScript.workspaceToCode(workspace);
+        Blockly.JavaScript.INFINITE_LOOP_TRAP = null;
+        try {
+
+          eval(code);
+        } catch (e) {
+          alert(e);
+        }
+      }
+      function emStop(){
+        client.stop();
+        client.land();
+      }
+    </script>
+  </body>
+</html>
