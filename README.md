@@ -1,4 +1,2 @@
-[![N|Solid](http://student.computing.dcu.ie/~geoghen4/project/logo2.png)]()
+My 3rd Year college project. Copter Blocks is a graphical learning environment that teaches beginner and novice developers basic programming concepts through programming a quadcopter. It is a cross platform desktop application.
 
-# BLOGS
-https://copterblocks.wordpress.com/
